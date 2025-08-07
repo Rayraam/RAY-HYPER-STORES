@@ -5,45 +5,100 @@ let currentPage = 1;
 const PRODUCTS_PER_PAGE = 12;
 let isLoading = false;
 
-// WhatsApp Configuration - UPDATE THIS WITH YOUR NUMBER
-const WHATSAPP_NUMBER = '919876543210'; // Replace with your actual WhatsApp number
+// Cart System (using in-memory storage for Claude.ai compatibility)
+let cartItems = []; // In your environment, replace with localStorage
+let currentCurrency = 'INR';
+const CART_STORAGE_KEY = 'raystore_cart';
+let exchangeRates = {
+    'INR': 1,
+    'GBP': 0.012,
+    'USD': 0.012,
+    'CAD': 0.016,
+    'LKR': 3.65
+};
+let userCountry = 'IN';
 
-// Sample Products Data - WORKING VERSION
+// WhatsApp Configuration
+const WHATSAPP_NUMBER = '919698639115';
+
+// Enhanced Sample Products Data with specifications
 const sampleProducts = [
     {
         id: 1,
-        name: "Elegant Red Silk Saree",
+        name: "SR001-Kalyani Cotton/Lata Gadwal Paithani Saree",
         category: "sarees",
-        price: 2500,
-        originalPrice: 3000,
-        image: "https://drive.google.com/file/d/1vk8OBJXizG_-R-Y74YDG_359g6P1QKaV/view?usp=drive_link",
+        subCategory: "Kalyani Cotton",
+        price: 1223,
+        originalPrice: 1223,
+        image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400&h=400&fit=crop&q=80",
+        images: [
+            "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&h=800&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=800&h=800&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=800&h=800&fit=crop&q=80"
+        ],
         description: "Beautiful red silk saree with golden border perfect for weddings and special occasions",
+        specifications: {
+            "Material": "100% Cotton with Acrylic thread",
+            "Length": "6.30 meters with blouse",
+            "Work": "Thread puttas all over",
+            "Pallu": "Grand jari pallu",
+            "Blouse": "Contrast blouse included",
+            "Care": "Dry clean recommended",
+            "Origin": "Handloom"
+        },
         inStock: true,
-        isNew: false,
-        onSale: true,
-        tags: ["silk", "wedding", "traditional", "red"]
+        isNew: true,
+        onSale: false,
+        tags: ["cotton", "paithani", "traditional", "handloom"]
     },
     {
         id: 2,
         name: "Gold Plated Necklace Set",
         category: "jewelry",
+        subCategory: "Necklace Sets",
         price: 1800,
         originalPrice: 2200,
         image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop&q=80",
+        images: [
+            "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&h=800&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=800&h=800&fit=crop&q=80"
+        ],
         description: "Elegant gold plated necklace with matching earrings perfect for parties",
+        specifications: {
+            "Material": "Gold Plated Brass",
+            "Set Includes": "Necklace + Earrings",
+            "Chain Length": "16-18 inches adjustable",
+            "Closure": "Lobster clasp",
+            "Occasion": "Party, Festival, Wedding",
+            "Care": "Keep away from water and chemicals",
+            "Weight": "65 grams (approx)"
+        },
         inStock: true,
         isNew: true,
-        onSale: false,
+        onSale: true,
         tags: ["gold", "necklace", "party", "elegant"]
     },
     {
         id: 3,
         name: "Blue Cotton Handloom Saree",
         category: "sarees",
+        subCategory: "Cotton Handloom",
         price: 1200,
         originalPrice: 1200,
         image: "https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=400&h=400&fit=crop&q=80",
+        images: [
+            "https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=800&h=800&fit=crop&q=80"
+        ],
         description: "Comfortable blue cotton handloom saree perfect for daily wear",
+        specifications: {
+            "Material": "100% Pure Cotton",
+            "Length": "6.30 meters with blouse",
+            "Weave": "Handloom",
+            "Border": "Traditional border design",
+            "Blouse": "Running blouse included",
+            "Care": "Machine wash cold",
+            "GSM": "120 GSM"
+        },
         inStock: true,
         isNew: false,
         onSale: false,
@@ -53,10 +108,23 @@ const sampleProducts = [
         id: 4,
         name: "Pearl Drop Earrings",
         category: "jewelry",
+        subCategory: "Earrings",
         price: 800,
         originalPrice: 1000,
         image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400&h=400&fit=crop&q=80",
+        images: [
+            "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&h=800&fit=crop&q=80"
+        ],
         description: "Elegant pearl drop earrings with silver finish",
+        specifications: {
+            "Material": "Sterling Silver with Pearl",
+            "Pearl Type": "Freshwater Pearl",
+            "Drop Length": "2.5 inches",
+            "Closure": "French hook",
+            "Occasion": "Daily wear, Office, Party",
+            "Care": "Store in jewelry box, avoid moisture",
+            "Weight": "8 grams"
+        },
         inStock: true,
         isNew: false,
         onSale: true,
@@ -66,105 +134,27 @@ const sampleProducts = [
         id: 5,
         name: "Green Banarasi Silk Saree",
         category: "sarees",
+        subCategory: "Banarasi Silk",
         price: 4500,
         originalPrice: 5500,
         image: "https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=400&h=400&fit=crop&q=80",
+        images: [
+            "https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=800&h=800&fit=crop&q=80"
+        ],
         description: "Exquisite green Banarasi silk saree with heavy gold zari work",
+        specifications: {
+            "Material": "Pure Banarasi Silk",
+            "Length": "6.30 meters with blouse",
+            "Work": "Heavy Zari Work",
+            "Weave": "Handwoven",
+            "Blouse": "Matching blouse piece",
+            "Care": "Dry clean only",
+            "Thread Count": "High density weave"
+        },
         inStock: true,
         isNew: true,
         onSale: false,
         tags: ["banarasi", "silk", "premium", "green"]
-    },
-    {
-        id: 6,
-        name: "Diamond Tennis Bracelet",
-        category: "jewelry",
-        price: 3200,
-        originalPrice: 4000,
-        image: "https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=400&h=400&fit=crop&q=80",
-        description: "Stunning diamond tennis bracelet with premium setting",
-        inStock: true,
-        isNew: false,
-        onSale: true,
-        tags: ["diamond", "bracelet", "premium", "luxury"]
-    },
-    {
-        id: 7,
-        name: "Purple Georgette Saree",
-        category: "sarees",
-        price: 2200,
-        originalPrice: 2200,
-        image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400&h=400&fit=crop&q=80",
-        description: "Elegant purple georgette saree with embroidery work",
-        inStock: true,
-        isNew: false,
-        onSale: false,
-        tags: ["georgette", "purple", "embroidery", "party"]
-    },
-    {
-        id: 8,
-        name: "Silver Oxidized Jhumkas",
-        category: "jewelry",
-        price: 650,
-        originalPrice: 800,
-        image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400&h=400&fit=crop&q=80",
-        description: "Traditional silver oxidized jhumkas with intricate design",
-        inStock: true,
-        isNew: true,
-        onSale: true,
-        tags: ["silver", "jhumkas", "traditional", "oxidized"]
-    },
-    {
-        id: 9,
-        name: "Pink Designer Saree",
-        category: "sarees",
-        price: 3200,
-        originalPrice: 3800,
-        image: "https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=400&h=400&fit=crop&q=80",
-        description: "Designer pink saree with heavy work perfect for weddings",
-        inStock: true,
-        isNew: false,
-        onSale: true,
-        tags: ["designer", "pink", "wedding", "heavy work"]
-    },
-    {
-        id: 10,
-        name: "Gold Chain Necklace",
-        category: "jewelry",
-        price: 2800,
-        originalPrice: 3200,
-        image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop&q=80",
-        description: "Classic gold chain necklace perfect for daily wear",
-        inStock: true,
-        isNew: false,
-        onSale: false,
-        tags: ["gold", "chain", "daily", "classic"]
-    },
-    {
-        id: 11,
-        name: "Maroon Velvet Saree",
-        category: "sarees",
-        price: 2800,
-        originalPrice: 3200,
-        image: "https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=400&h=400&fit=crop&q=80",
-        description: "Rich maroon velvet saree with golden border",
-        inStock: true,
-        isNew: true,
-        onSale: true,
-        tags: ["velvet", "maroon", "golden", "rich"]
-    },
-    {
-        id: 12,
-        name: "Emerald Ring Set",
-        category: "jewelry",
-        price: 4200,
-        originalPrice: 5000,
-        image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&h=400&fit=crop&q=80",
-        description: "Beautiful emerald ring set with matching earrings",
-        inStock: true,
-        isNew: false,
-        onSale: true,
-        tags: ["emerald", "ring", "set", "precious"]
     }
 ];
 
@@ -174,14 +164,20 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Initialize Application
-function initializeApp() {
+async function initializeApp() {
     console.log('🏪 RAY HYPER STORE starting...');
     
-    // Load products immediately
+    // Detect user location and set currency
+    await detectUserLocation();
+    
+    // Load products
     loadProducts();
     
     // Setup event listeners
     setupEventListeners();
+    
+    // Initialize cart
+    initializeCart();
     
     // Initialize animations
     initializeAnimations();
@@ -192,24 +188,248 @@ function initializeApp() {
     // Initialize mobile menu
     initializeMobileMenu();
     
-    // Setup intersection observer for animations
+    // Setup intersection observer
     setupIntersectionObserver();
+    
+    // Update currency display
+    updateCurrencyDisplay();
     
     console.log('✅ RAY HYPER STORE initialized successfully!');
 }
 
-// Load Products - FIXED VERSION
+// Detect User Location for Currency
+async function detectUserLocation() {
+    try {
+        const response = await fetch('https://ipapi.co/json/');
+        const data = await response.json();
+        userCountry = data.country_code;
+        
+        // Set currency based on country
+        switch(userCountry) {
+            case 'GB':
+                currentCurrency = 'GBP';
+                break;
+            case 'US':
+                currentCurrency = 'USD';
+                break;
+            case 'CA':
+                currentCurrency = 'CAD';
+                break;
+            case 'LK':
+                currentCurrency = 'LKR';
+                break;
+            default:
+                currentCurrency = 'INR';
+        }
+        
+        console.log(`🌍 Detected country: ${userCountry}, Currency: ${currentCurrency}`);
+    } catch (error) {
+        console.log('📍 Using default location (India)');
+        userCountry = 'IN';
+        currentCurrency = 'INR';
+    }
+}
+
+// Convert price to current currency
+function convertPrice(priceINR) {
+    const convertedPrice = priceINR * exchangeRates[currentCurrency];
+    return Math.round(convertedPrice * 100) / 100;
+}
+
+// Format price with currency symbol
+function formatPrice(price) {
+    const convertedPrice = convertPrice(price);
+    const symbols = {
+        'INR': '₹',
+        'GBP': '£',
+        'USD': '$',
+        'CAD': 'C$',
+        'LKR': 'Rs.'
+    };
+    
+    return `${symbols[currentCurrency]}${convertedPrice.toLocaleString()}`;
+}
+
+// Initialize Cart System
+function initializeCart() {
+    console.log('🛒 Initializing cart system...');
+    
+    try {
+        const savedCart = localStorage.getItem(CART_STORAGE_KEY);
+        if (savedCart) {
+            cartItems = JSON.parse(savedCart);
+            console.log('✅ Loaded', cartItems.length, 'items from cart storage');
+        } else {
+            cartItems = [];
+            console.log('🆕 Starting with empty cart');
+        }
+    } catch (error) {
+        console.log('⚠️ Error loading cart, starting fresh:', error.message);
+        cartItems = [];
+    }
+    
+    updateCartCounter();
+    console.log('🛒 Cart system initialized successfully');
+}
+
+// Add item to cart
+function addToCart(productId, quantity = 1) {
+    console.log('🛒 Adding to cart:', productId, 'quantity:', quantity);
+    
+    const product = allProducts.find(p => p.id === productId);
+    if (!product) {
+        console.error('❌ Product not found:', productId);
+        showCartNotification('❌ Product not found!', 'error');
+        return;
+    }
+    
+    const existingItemIndex = cartItems.findIndex(item => item.id === productId);
+    
+    if (existingItemIndex !== -1) {
+        // ITEM ALREADY EXISTS - INCREASE QUANTITY
+        const existingItem = cartItems[existingItemIndex];
+        const newQuantity = existingItem.quantity + quantity;
+        
+        const maxQuantity = 10;
+        if (newQuantity > maxQuantity) {
+            showCartNotification(`⚠️ Maximum ${maxQuantity} items allowed per product`, 'warning');
+            return;
+        }
+        
+        cartItems[existingItemIndex].quantity = newQuantity;
+        cartItems[existingItemIndex].addedAt = new Date().toISOString();
+        
+        showCartNotification(`📝 Updated quantity to ${newQuantity} for ${product.name}`, 'info');
+        console.log('📝 Updated existing item quantity:', newQuantity);
+        
+    } else {
+        // NEW ITEM - ADD TO CART
+        const cartItem = {
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            originalPrice: product.originalPrice,
+            image: product.image,
+            category: product.category,
+            subCategory: product.subCategory,
+            description: product.description,
+            quantity: quantity,
+            addedAt: new Date().toISOString()
+        };
+        
+        cartItems.push(cartItem);
+        showCartNotification(`✅ ${product.name} added to cart!`, 'success');
+        console.log('✅ Added new item to cart:', product.name);
+    }
+    
+    saveCartToStorage();
+    updateCartCounter();
+}
+
+// Remove item from cart
+function removeFromCart(productId) {
+    console.log('🗑️ Removing from cart:', productId);
+    
+    const itemToRemove = cartItems.find(item => item.id === productId);
+    if (itemToRemove) {
+        cartItems = cartItems.filter(item => item.id !== productId);
+        saveCartToStorage();
+        updateCartCounter();
+        
+        const cartDrawer = document.getElementById('cartDrawer');
+        if (cartDrawer && cartDrawer.classList.contains('open')) {
+            updateCartDrawerContent(cartDrawer);
+        }
+        
+        showCartNotification(`🗑️ ${itemToRemove.name} removed from cart`, 'info');
+        console.log('✅ Item removed from cart');
+    }
+}
+
+function saveCartToStorage() {
+    try {
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+        console.log('💾 Cart saved to storage');
+    } catch (error) {
+        console.error('❌ Error saving cart:', error.message);
+        showCartNotification('⚠️ Error saving cart', 'warning');
+    }
+}
+
+// Update cart counter in header
+function updateCartCounter() {
+    const cartCounter = document.getElementById('cartCounter');
+    if (cartCounter) {
+        const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+        cartCounter.textContent = totalItems;
+        cartCounter.style.display = totalItems > 0 ? 'block' : 'none';
+    }
+}
+
+// Show cart notification
+function showCartNotification(message, type = 'success') {
+    console.log('🔔 Notification:', message, type);
+    
+    // Remove existing notifications
+    const existingNotifications = document.querySelectorAll('.cart-notification');
+    existingNotifications.forEach(notification => {
+        notification.remove();
+    });
+    
+    const notification = document.createElement('div');
+    notification.className = `cart-notification ${type}`;
+    notification.textContent = message;
+    
+    const colors = {
+        success: '#27ae60',
+        error: '#e74c3c', 
+        warning: '#f39c12',
+        info: '#3498db'
+    };
+    
+    notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: ${colors[type] || colors.success};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        z-index: 2000;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        max-width: 300px;
+        font-weight: 500;
+        word-wrap: break-word;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
+}
+
+// Load Products
 function loadProducts() {
     console.log('📦 Loading products...');
     
-    // Always start with sample data
-    allProducts = [...sampleProducts]; // Create a copy
+    allProducts = [...sampleProducts];
     console.log('✅ Loaded', allProducts.length, 'sample products');
     
-    // Display products immediately
     filterAndDisplayProducts();
     
-    // Try to load from external JSON file (optional)
+    // Try to load from external JSON file
     fetch('./data/products.json')
         .then(response => {
             if (response.ok) {
@@ -221,10 +441,6 @@ function loadProducts() {
             if (data.products && data.products.length > 0) {
                 allProducts = data.products;
                 console.log('✅ Updated with', allProducts.length, 'products from JSON file');
-                filterAndDisplayProducts();
-            } else if (data.length && Array.isArray(data)) {
-                allProducts = data;
-                console.log('✅ Updated with', allProducts.length, 'products from JSON array');
                 filterAndDisplayProducts();
             }
         })
@@ -241,28 +457,29 @@ function setupEventListeners() {
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
         searchInput.addEventListener('input', debounce(handleSearch, 300));
-        console.log('✅ Search input listener added');
     }
     
-    // Category filter
+    // Category filters
     const categoryFilter = document.getElementById('categoryFilter');
     if (categoryFilter) {
         categoryFilter.addEventListener('change', handleCategoryChange);
-        console.log('✅ Category filter listener added');
+    }
+    
+    const subCategoryFilter = document.getElementById('subCategoryFilter');
+    if (subCategoryFilter) {
+        subCategoryFilter.addEventListener('change', handleSubCategoryChange);
     }
     
     // Sort filter
     const sortFilter = document.getElementById('sortFilter');
     if (sortFilter) {
         sortFilter.addEventListener('change', handleSortChange);
-        console.log('✅ Sort filter listener added');
     }
     
     // Price range
     const priceRange = document.getElementById('priceRange');
     if (priceRange) {
         priceRange.addEventListener('input', handlePriceChange);
-        console.log('✅ Price range listener added');
     }
     
     // View toggle buttons
@@ -270,35 +487,40 @@ function setupEventListeners() {
     viewButtons.forEach(btn => {
         btn.addEventListener('click', handleViewChange);
     });
-    console.log('✅ View toggle listeners added');
     
-    // Navigation links
+    // Currency selector
+    const currencySelector = document.getElementById('currencySelector');
+    if (currencySelector) {
+        currencySelector.addEventListener('change', handleCurrencyChange);
+    }
+    
+    // Cart icon
+    const cartIcon = document.getElementById('cartIcon');
+    if (cartIcon) {
+        cartIcon.addEventListener('click', toggleCartDrawer);
+    }
+    
+    // Navigation and other existing listeners
     const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
     navLinks.forEach(link => {
         link.addEventListener('click', handleNavigation);
     });
-    console.log('✅ Navigation listeners added');
     
-    // Contact form
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
         contactForm.addEventListener('submit', handleContactSubmit);
-        console.log('✅ Contact form listener added');
     }
     
-    // Mobile menu
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     const mobileMenuClose = document.querySelector('.mobile-menu-close');
     const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
     
     if (mobileMenuBtn) {
         mobileMenuBtn.addEventListener('click', toggleMobileMenu);
-        console.log('✅ Mobile menu button listener added');
     }
     
     if (mobileMenuClose) {
         mobileMenuClose.addEventListener('click', closeMobileMenu);
-        console.log('✅ Mobile menu close listener added');
     }
     
     mobileNavLinks.forEach(link => {
@@ -308,7 +530,58 @@ function setupEventListeners() {
     console.log('✅ All event listeners set up successfully');
 }
 
-// Debounce function for search
+// Handle Currency Change
+function handleCurrencyChange(event) {
+    currentCurrency = event.target.value;
+    updateCurrencyDisplay();
+    filterAndDisplayProducts(); // Refresh to show new prices
+    console.log('💱 Currency changed to:', currentCurrency);
+}
+
+// Update Currency Display
+function updateCurrencyDisplay() {
+    const currencySelector = document.getElementById('currencySelector');
+    if (currencySelector) {
+        currencySelector.value = currentCurrency;
+    }
+}
+
+// Handle Sub Category Change
+function handleSubCategoryChange(event) {
+    console.log('📂 Sub-category changed to:', event.target.value);
+    filterAndDisplayProducts();
+}
+
+// Populate sub-categories based on main category
+function populateSubCategories(category) {
+    const subCategoryFilter = document.getElementById('subCategoryFilter');
+    if (!subCategoryFilter) return;
+    
+    let subCategories = [];
+    
+    if (category === 'sarees') {
+        subCategories = ['All Sub-Categories', 'Kalyani Cotton', 'Lata Gadwal Paithani', 'Cotton Handloom', 'Banarasi Silk'];
+    } else if (category === 'jewelry') {
+        subCategories = ['All Sub-Categories', 'Necklace Sets', 'Earrings', 'Bangles', 'Rings'];
+    } else {
+        subCategories = ['All Sub-Categories'];
+    }
+    
+    subCategoryFilter.innerHTML = subCategories.map((subCat, index) => 
+        `<option value="${index === 0 ? 'all' : subCat.toLowerCase().replace(/\s+/g, '')}">${subCat}</option>`
+    ).join('');
+}
+
+// Handle Category Change
+function handleCategoryChange(event) {
+    const category = event.target.value;
+    console.log('📂 Category changed to:', category);
+    
+    populateSubCategories(category);
+    filterAndDisplayProducts();
+}
+
+// Debounce function
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -327,12 +600,6 @@ function handleSearch(event) {
     filterAndDisplayProducts();
 }
 
-// Handle Category Change
-function handleCategoryChange(event) {
-    console.log('📂 Category changed to:', event.target.value);
-    filterAndDisplayProducts();
-}
-
 // Handle Sort Change
 function handleSortChange(event) {
     console.log('🔄 Sort changed to:', event.target.value);
@@ -343,7 +610,7 @@ function handleSortChange(event) {
 function handlePriceChange(event) {
     const priceValue = document.getElementById('priceValue');
     if (priceValue) {
-        priceValue.textContent = event.target.value;
+        priceValue.textContent = formatPrice(event.target.value);
     }
     console.log('💰 Price range changed to:', event.target.value);
     filterAndDisplayProducts();
@@ -369,7 +636,7 @@ function handleViewChange(event) {
     }
 }
 
-// Filter and Display Products - MAIN FUNCTION
+// Filter and Display Products
 function filterAndDisplayProducts() {
     console.log('🔄 Filtering and displaying products...');
     
@@ -381,10 +648,11 @@ function filterAndDisplayProducts() {
     
     const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
     const category = document.getElementById('categoryFilter')?.value || 'all';
+    const subCategory = document.getElementById('subCategoryFilter')?.value || 'all';
     const sortBy = document.getElementById('sortFilter')?.value || 'newest';
     const maxPrice = parseInt(document.getElementById('priceRange')?.value || '10000');
     
-    console.log('🔍 Filters:', { searchTerm, category, sortBy, maxPrice });
+    console.log('🔍 Filters:', { searchTerm, category, subCategory, sortBy, maxPrice });
     
     // Filter products
     let filteredProducts = allProducts.filter(product => {
@@ -396,10 +664,12 @@ function filterAndDisplayProducts() {
             (product.tags && product.tags.some(tag => tag.toLowerCase().includes(searchTerm)));
         
         const matchesCategory = category === 'all' || product.category === category;
+        const matchesSubCategory = subCategory === 'all' || 
+            product.subCategory?.toLowerCase().replace(/\s+/g, '') === subCategory;
         const matchesPrice = product.price <= maxPrice;
-        const inStock = product.inStock !== false; // Default to true if not specified
+        const inStock = product.inStock !== false;
         
-        return matchesSearch && matchesCategory && matchesPrice && inStock;
+        return matchesSearch && matchesCategory && matchesSubCategory && matchesPrice && inStock;
     });
     
     console.log('📊 Filtered', filteredProducts.length, 'products from', allProducts.length, 'total');
@@ -407,14 +677,10 @@ function filterAndDisplayProducts() {
     // Sort products
     filteredProducts = sortProducts(filteredProducts, sortBy);
     
-    // Reset pagination
     currentPage = 1;
     displayedProducts = filteredProducts;
     
-    // Display products
     displayProducts();
-    
-    // Update results count
     updateResultsCount(filteredProducts.length);
 }
 
@@ -435,7 +701,7 @@ function sortProducts(products, sortBy) {
     }
 }
 
-// Display Products - FIXED VERSION
+// Display Products
 function displayProducts() {
     const productsGrid = document.getElementById('productsGrid');
     const loadingSpinner = document.getElementById('loadingSpinner');
@@ -449,7 +715,6 @@ function displayProducts() {
     console.log('🎨 Displaying products...');
     showLoading(true);
     
-    // Simulate loading delay for better UX
     setTimeout(() => {
         const startIndex = 0;
         const endIndex = currentPage * PRODUCTS_PER_PAGE;
@@ -462,7 +727,7 @@ function displayProducts() {
         } else {
             productsGrid.innerHTML = productsToShow.map(product => createProductCard(product)).join('');
             
-            // Add fade-in animation to product cards
+            // Add fade-in animation
             const productCards = productsGrid.querySelectorAll('.product-card');
             productCards.forEach((card, index) => {
                 card.style.opacity = '0';
@@ -475,7 +740,7 @@ function displayProducts() {
             });
         }
         
-        // Update load more button visibility
+        // Update load more button
         if (loadMoreBtn) {
             if (endIndex < displayedProducts.length) {
                 loadMoreBtn.style.display = 'block';
@@ -490,81 +755,390 @@ function displayProducts() {
     }, 300);
 }
 
-// Show No Products Message
-function showNoProducts() {
-    const productsGrid = document.getElementById('productsGrid');
-    if (productsGrid) {
-        productsGrid.innerHTML = `
-            <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #666;">
-                <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
-                <h3 style="margin-bottom: 1rem;">No products found</h3>
-                <p>Try adjusting your search or filters</p>
-                <button onclick="clearFilters()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                    Clear Filters
-                </button>
-            </div>
-        `;
-    }
-}
-
-// Clear Filters Function
-function clearFilters() {
-    const searchInput = document.getElementById('searchInput');
-    const categoryFilter = document.getElementById('categoryFilter');
-    const sortFilter = document.getElementById('sortFilter');
-    const priceRange = document.getElementById('priceRange');
-    const priceValue = document.getElementById('priceValue');
-    
-    if (searchInput) searchInput.value = '';
-    if (categoryFilter) categoryFilter.value = 'all';
-    if (sortFilter) sortFilter.value = 'newest';
-    if (priceRange) priceRange.value = '10000';
-    if (priceValue) priceValue.textContent = '10000';
-    
-    filterAndDisplayProducts();
-}
-
-// Create Product Card
+// Create Product Card with enhanced features
 function createProductCard(product) {
     if (!product) return '';
     
     const discount = product.originalPrice && product.originalPrice > product.price ? 
         Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
     
-    const whatsappMessage = `Hello! I'm interested in *${product.name}* priced at ₹${product.price}. Please share more details.`;
+    const whatsappMessage = `Hello! I'm interested in *${product.name}* priced at ${formatPrice(product.price)}. Please share more details.`;
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
+    
+    // Create specifications preview
+    const specsPreview = product.specifications ? 
+        Object.entries(product.specifications).slice(0, 3).map(([key, value]) => 
+            `<div class="spec-item"><strong>${key}:</strong> ${value}</div>`
+        ).join('') : '';
+    
+    const hasMoreSpecs = product.specifications && Object.keys(product.specifications).length > 3;
     
     return `
         <div class="product-card" data-id="${product.id}">
-            <div class="product-image">
+            <div class="product-image" onclick="openProductDetail(${product.id})">
                 <img src="${product.image || 'https://via.placeholder.com/400x400?text=No+Image'}" 
                      alt="${product.name}" 
                      loading="lazy"
                      onerror="this.src='https://via.placeholder.com/400x400?text=No+Image'">
                 ${product.isNew ? '<div class="product-badge new">New</div>' : ''}
                 ${product.onSale ? '<div class="product-badge sale">Sale</div>' : ''}
+                <div class="product-overlay">
+                    <i class="fas fa-eye"></i>
+                    <span>View Details</span>
+                </div>
             </div>
             <div class="product-info">
                 <h3 class="product-name">${product.name}</h3>
                 <p class="product-description">${product.description}</p>
+                
+                ${specsPreview ? `
+                <div class="product-specs">
+                    ${specsPreview}
+                    ${hasMoreSpecs ? '<div class="specs-toggle" onclick="toggleSpecs(this)">Show More <i class="fas fa-chevron-down"></i></div>' : ''}
+                    ${hasMoreSpecs ? `
+                    <div class="specs-hidden" style="display: none;">
+                        ${Object.entries(product.specifications).slice(3).map(([key, value]) => 
+                            `<div class="spec-item"><strong>${key}:</strong> ${value}</div>`
+                        ).join('')}
+                    </div>` : ''}
+                </div>` : ''}
+                
                 <div class="product-price">
-                    <span class="current-price">₹${(product.price || 0).toLocaleString()}</span>
+                    <span class="current-price">${formatPrice(product.price)}</span>
                     ${product.originalPrice && product.originalPrice > product.price ? 
-                        `<span class="original-price">₹${product.originalPrice.toLocaleString()}</span>
+                        `<span class="original-price">${formatPrice(product.originalPrice)}</span>
                          <span class="discount-badge">${discount}% OFF</span>` : ''}
                 </div>
                 <div class="product-actions">
+                    <button class="add-to-cart-btn" onclick="addToCart(${product.id})">
+                        <i class="fas fa-shopping-cart"></i>
+                        Add to Cart
+                    </button>
                     <a href="${whatsappUrl}" target="_blank" class="whatsapp-order">
                         <i class="fab fa-whatsapp"></i>
-                        Order via WhatsApp
                     </a>
-                    <button class="quick-view" onclick="showProductDetails(${product.id})">
+                    <button class="quick-view" onclick="openProductDetail(${product.id})">
                         <i class="fas fa-eye"></i>
                     </button>
                 </div>
             </div>
         </div>
     `;
+}
+
+// Toggle specifications in product card
+function toggleSpecs(element) {
+    const specsHidden = element.parentElement.querySelector('.specs-hidden');
+    const icon = element.querySelector('i');
+    
+    if (specsHidden.style.display === 'none') {
+        specsHidden.style.display = 'block';
+        element.innerHTML = 'Show Less <i class="fas fa-chevron-up"></i>';
+    } else {
+        specsHidden.style.display = 'none';
+        element.innerHTML = 'Show More <i class="fas fa-chevron-down"></i>';
+    }
+}
+
+// Open Product Detail Page
+function openProductDetail(productId) {
+    // In a real implementation, this would navigate to product.html?id=${productId}
+    // For now, we'll create a modal-like detailed view
+    const product = allProducts.find(p => p.id === productId);
+    if (!product) return;
+    
+    createProductDetailModal(product);
+}
+
+// Create Product Detail Modal
+function createProductDetailModal(product) {
+    const modal = document.createElement('div');
+    modal.className = 'product-detail-modal';
+    modal.innerHTML = `
+        <div class="modal-overlay" onclick="closeProductDetail()"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeProductDetail()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="product-detail-grid">
+                <div class="product-images">
+                    <div class="main-image">
+                        <img id="mainProductImage" src="${product.image}" alt="${product.name}">
+                        <div class="zoom-indicator">
+                            <i class="fas fa-search-plus"></i>
+                            Click to zoom
+                        </div>
+                    </div>
+                    ${product.images && product.images.length > 1 ? `
+                    <div class="thumbnail-images">
+                        ${product.images.map((img, index) => `
+                            <img src="${img}" alt="${product.name} ${index + 1}" 
+                                 onclick="changeMainImage('${img}')" class="thumbnail">
+                        `).join('')}
+                    </div>` : ''}
+                </div>
+                <div class="product-detail-info">
+                    <h1>${product.name}</h1>
+                    <div class="product-price">
+                        <span class="current-price">${formatPrice(product.price)}</span>
+                        ${product.originalPrice && product.originalPrice > product.price ? 
+                            `<span class="original-price">${formatPrice(product.originalPrice)}</span>` : ''}
+                    </div>
+                    <p class="product-description">${product.description}</p>
+                    
+                    ${product.specifications ? `
+                    <div class="product-specifications">
+                        <h3>Specifications</h3>
+                        <div class="specs-grid">
+                            ${Object.entries(product.specifications).map(([key, value]) => 
+                                `<div class="spec-row">
+                                    <span class="spec-label">${key}:</span>
+                                    <span class="spec-value">${value}</span>
+                                </div>`
+                            ).join('')}
+                        </div>
+                    </div>` : ''}
+                    
+                    <div class="product-actions-detail">
+                        <div class="quantity-selector">
+                            <button onclick="decrementQuantity()">-</button>
+                            <input type="number" id="productQuantity" value="1" min="1" max="10">
+                            <button onclick="incrementQuantity()">+</button>
+                        </div>
+                        <button class="add-to-cart-btn primary" onclick="addToCartFromDetail(${product.id})">
+                            <i class="fas fa-shopping-cart"></i>
+                            Add to Cart
+                        </button>
+                        <a href="https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`Hello! I want to order *${product.name}* priced at ${formatPrice(product.price)}.`)}" 
+                           target="_blank" class="whatsapp-order-btn">
+                            <i class="fab fa-whatsapp"></i>
+                            Order via WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden';
+    
+    // Add click-to-zoom functionality
+    const mainImage = document.getElementById('mainProductImage');
+    mainImage.onclick = () => zoomImage(mainImage.src);
+    
+    setTimeout(() => {
+        modal.classList.add('show');
+    }, 100);
+}
+
+// Close Product Detail Modal
+function closeProductDetail() {
+    const modal = document.querySelector('.product-detail-modal');
+    if (modal) {
+        modal.classList.remove('show');
+        document.body.style.overflow = 'auto';
+        setTimeout(() => {
+            document.body.removeChild(modal);
+        }, 300);
+    }
+}
+
+// Change main image in detail view
+function changeMainImage(imageSrc) {
+    const mainImage = document.getElementById('mainProductImage');
+    if (mainImage) {
+        mainImage.src = imageSrc;
+    }
+}
+
+// Zoom image functionality
+function zoomImage(imageSrc) {
+    const zoomModal = document.createElement('div');
+    zoomModal.className = 'zoom-modal';
+    zoomModal.innerHTML = `
+        <div class="zoom-overlay" onclick="closeZoom()"></div>
+        <div class="zoom-content">
+            <img src="${imageSrc}" alt="Zoomed Image" id="zoomedImage">
+            <button class="zoom-close" onclick="closeZoom()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(zoomModal);
+    
+    setTimeout(() => {
+        zoomModal.classList.add('show');
+    }, 100);
+}
+
+// Close zoom modal
+function closeZoom() {
+    const zoomModal = document.querySelector('.zoom-modal');
+    if (zoomModal) {
+        zoomModal.classList.remove('show');
+        setTimeout(() => {
+            document.body.removeChild(zoomModal);
+        }, 300);
+    }
+}
+
+// Quantity selector functions
+function incrementQuantity() {
+    const quantityInput = document.getElementById('productQuantity');
+    if (quantityInput) {
+        const currentValue = parseInt(quantityInput.value);
+        if (currentValue < 10) {
+            quantityInput.value = currentValue + 1;
+        }
+    }
+}
+
+function decrementQuantity() {
+    const quantityInput = document.getElementById('productQuantity');
+    if (quantityInput) {
+        const currentValue = parseInt(quantityInput.value);
+        if (currentValue > 1) {
+            quantityInput.value = currentValue - 1;
+        }
+    }
+}
+
+// Add to cart from detail view
+function addToCartFromDetail(productId) {
+    const quantityInput = document.getElementById('productQuantity');
+    const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
+    addToCart(productId, quantity);
+}
+
+// Toggle Cart Drawer
+function toggleCartDrawer() {
+    const cartDrawer = document.getElementById('cartDrawer');
+    if (!cartDrawer) {
+        createCartDrawer();
+    } else {
+        cartDrawer.classList.toggle('open');
+    }
+}
+
+// Create Cart Drawer
+function createCartDrawer() {
+    const cartDrawer = document.createElement('div');
+    cartDrawer.id = 'cartDrawer';
+    cartDrawer.className = 'cart-drawer';
+    
+    updateCartDrawerContent(cartDrawer);
+    document.body.appendChild(cartDrawer);
+    
+    setTimeout(() => {
+        cartDrawer.classList.add('open');
+    }, 100);
+}
+
+// Update Cart Drawer Content
+function updateCartDrawerContent(cartDrawer) {
+    const totalAmount = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    
+    cartDrawer.innerHTML = `
+        <div class="cart-header">
+            <h3>Shopping Cart (${totalItems})</h3>
+            <button onclick="toggleCartDrawer()" class="cart-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-body">
+            ${cartItems.length === 0 ? `
+                <div class="empty-cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <h4>Your cart is empty</h4>
+                    <p>Add some products to get started!</p>
+                </div>
+            ` : `
+                <div class="cart-items">
+                    ${cartItems.map(item => `
+                        <div class="cart-item">
+                            <img src="${item.image}" alt="${item.name}">
+                            <div class="cart-item-info">
+                                <h4>${item.name}</h4>
+                                <div class="cart-item-price">${formatPrice(item.price)}</div>
+                                <div class="cart-item-controls">
+                                    <button onclick="updateCartQuantity(${item.id}, ${item.quantity - 1})">-</button>
+                                    <span>${item.quantity}</span>
+                                    <button onclick="updateCartQuantity(${item.id}, ${item.quantity + 1})">+</button>
+                                    <button onclick="removeFromCart(${item.id})" class="remove-item">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="cart-summary">
+                    <div class="cart-total">
+                        <strong>Total: ${formatPrice(totalAmount)}</strong>
+                    </div>
+                    <button onclick="proceedToWhatsAppCheckout()" class="checkout-btn">
+                        <i class="fab fa-whatsapp"></i>
+                        Checkout via WhatsApp
+                    </button>
+                </div>
+            `}
+        </div>
+    `;
+}
+
+// Update cart quantity
+function updateCartQuantity(productId, newQuantity) {
+    console.log('📝 Updating cart quantity:', productId, newQuantity);
+    
+    if (newQuantity <= 0) {
+        removeFromCart(productId);
+        return;
+    }
+    
+    const maxQuantity = 10;
+    if (newQuantity > maxQuantity) {
+        showCartNotification(`⚠️ Maximum ${maxQuantity} items allowed`, 'warning');
+        return;
+    }
+    
+    const itemIndex = cartItems.findIndex(item => item.id === productId);
+    if (itemIndex !== -1) {
+        cartItems[itemIndex].quantity = newQuantity;
+        cartItems[itemIndex].addedAt = new Date().toISOString();
+        
+        saveCartToStorage();
+        updateCartCounter();
+        
+        const cartDrawer = document.getElementById('cartDrawer');
+        if (cartDrawer && cartDrawer.classList.contains('open')) {
+            updateCartDrawerContent(cartDrawer);
+        }
+        
+        console.log('✅ Cart quantity updated');
+    }
+}
+
+// Proceed to WhatsApp checkout
+function proceedToWhatsAppCheckout() {
+    const totalAmount = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    
+    const orderMessage = `*New Order from RAY HYPER STORE*\n\n` +
+        `*Items:*\n` +
+        cartItems.map(item => 
+            `• ${item.name}\n  Quantity: ${item.quantity}\n  Price: ${formatPrice(item.price)} each\n  Subtotal: ${formatPrice(item.price * item.quantity)}\n`
+        ).join('\n') +
+        `\n*Total Amount: ${formatPrice(totalAmount)}*\n\n` +
+        `Please confirm this order and provide:\n` +
+        `• Delivery address\n` +
+        `• Preferred delivery date\n` +
+        `• Payment method\n\n` +
+        `Thank you for shopping with us!`;
+    
+    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(orderMessage)}`;
+    window.open(whatsappUrl, '_blank');
 }
 
 // Show Loading State
@@ -588,6 +1162,42 @@ function updateResultsCount(count) {
     }
 }
 
+// Show No Products Message
+function showNoProducts() {
+    const productsGrid = document.getElementById('productsGrid');
+    if (productsGrid) {
+        productsGrid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #666;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+                <h3 style="margin-bottom: 1rem;">No products found</h3>
+                <p>Try adjusting your search or filters</p>
+                <button onclick="clearFilters()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                    Clear Filters
+                </button>
+            </div>
+        `;
+    }
+}
+
+// Clear Filters Function
+function clearFilters() {
+    const searchInput = document.getElementById('searchInput');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const subCategoryFilter = document.getElementById('subCategoryFilter');
+    const sortFilter = document.getElementById('sortFilter');
+    const priceRange = document.getElementById('priceRange');
+    const priceValue = document.getElementById('priceValue');
+    
+    if (searchInput) searchInput.value = '';
+    if (categoryFilter) categoryFilter.value = 'all';
+    if (subCategoryFilter) subCategoryFilter.value = 'all';
+    if (sortFilter) sortFilter.value = 'newest';
+    if (priceRange) priceRange.value = '10000';
+    if (priceValue) priceValue.textContent = formatPrice(10000);
+    
+    filterAndDisplayProducts();
+}
+
 // Load More Products
 function loadMoreProducts() {
     if (isLoading) return;
@@ -602,7 +1212,6 @@ function loadMoreProducts() {
     
     console.log('📥 Loading more products...');
     
-    // Show loading state
     if (loadMoreBtn) {
         loadMoreBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
         loadMoreBtn.disabled = true;
@@ -613,11 +1222,9 @@ function loadMoreProducts() {
         const endIndex = currentPage * PRODUCTS_PER_PAGE;
         const newProducts = displayedProducts.slice(startIndex, endIndex);
         
-        // Append new products
         const newProductsHTML = newProducts.map(product => createProductCard(product)).join('');
         productsGrid.insertAdjacentHTML('beforeend', newProductsHTML);
         
-        // Update load more button
         if (loadMoreBtn) {
             if (endIndex < displayedProducts.length) {
                 loadMoreBtn.innerHTML = '<i class="fas fa-plus"></i> Load More Products';
@@ -627,10 +1234,8 @@ function loadMoreProducts() {
             }
         }
         
-        // Update results count
         updateResultsCount(displayedProducts.length);
         
-        // Add animation to new cards
         const newCards = productsGrid.querySelectorAll('.product-card:nth-last-child(-n+' + newProducts.length + ')');
         newCards.forEach((card, index) => {
             card.style.opacity = '0';
@@ -647,27 +1252,15 @@ function loadMoreProducts() {
     }, 1000);
 }
 
-// Show Product Details
-function showProductDetails(productId) {
-    const product = allProducts.find(p => p.id === productId);
-    if (!product) return;
-    
-    const whatsappMessage = `Hello! I want to know more about *${product.name}*. Please share detailed information including:\n\n• Available sizes\n• Color options\n• Delivery time\n• Return policy\n\nPrice: ₹${product.price}`;
-    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
-    
-    // Open WhatsApp in new tab
-    window.open(whatsappUrl, '_blank');
-}
-
 // Filter by Category
 function filterByCategory(category) {
     const categoryFilter = document.getElementById('categoryFilter');
     if (categoryFilter) {
         categoryFilter.value = category;
+        populateSubCategories(category);
         filterAndDisplayProducts();
     }
     
-    // Scroll to products section
     scrollToProducts();
 }
 
@@ -691,7 +1284,6 @@ function handleNavigation(event) {
         }
     }
     
-    // Update active nav link
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => link.classList.remove('active'));
     event.target.classList.add('active');
@@ -711,23 +1303,16 @@ function handleContactSubmit(event) {
         return;
     }
     
-    // Create WhatsApp message
     const whatsappMessage = `*New Contact Form Submission*\n\n*Name:* ${name}\n*Email:* ${email}\n*Phone:* ${phone || 'Not provided'}\n*Message:* ${message}`;
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
     
-    // Open WhatsApp
     window.open(whatsappUrl, '_blank');
-    
-    // Reset form
     event.target.reset();
-    
-    // Show success message
     alert('Thank you for your message! We will contact you soon via WhatsApp.');
 }
 
 // Mobile Menu Functions
 function initializeMobileMenu() {
-    // Close mobile menu when clicking outside
     document.addEventListener('click', (event) => {
         const mobileMenu = document.querySelector('.mobile-menu');
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
@@ -756,7 +1341,6 @@ function closeMobileMenu() {
 
 // Initialize Animations
 function initializeAnimations() {
-    // Counter animation for stats
     const counters = document.querySelectorAll('.stat-number');
     
     const animateCounter = (counter) => {
@@ -777,7 +1361,6 @@ function initializeAnimations() {
         updateCounter();
     };
     
-    // Intersection Observer for counter animation
     const counterObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -795,7 +1378,6 @@ function initializeAnimations() {
 
 // Setup Smooth Scrolling
 function setupSmoothScrolling() {
-    // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
@@ -825,7 +1407,6 @@ function setupIntersectionObserver() {
         });
     }, observerOptions);
     
-    // Observe elements that should animate
     const animateElements = document.querySelectorAll(
         '.product-card, .category-card, .stat-item, .about-feature, .contact-item'
     );
@@ -839,42 +1420,20 @@ function setupIntersectionObserver() {
 window.scrollToProducts = scrollToProducts;
 window.filterByCategory = filterByCategory;
 window.loadMoreProducts = loadMoreProducts;
-window.showProductDetails = showProductDetails;
 window.clearFilters = clearFilters;
-
-// Add CSS for animations
-const style = document.createElement('style');
-style.textContent = `
-    .animate-in {
-        animation: fadeInUp 0.6s ease forwards;
-    }
-    
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    .product-card, .category-card, .stat-item, .about-feature, .contact-item {
-        opacity: 0;
-        transform: translateY(30px);
-        transition: all 0.6s ease;
-    }
-    
-    .product-card.animate-in, 
-    .category-card.animate-in, 
-    .stat-item.animate-in, 
-    .about-feature.animate-in, 
-    .contact-item.animate-in {
-        opacity: 1;
-        transform: translateY(0);
-    }
-`;
-document.head.appendChild(style);
+window.addToCart = addToCart;
+window.removeFromCart = removeFromCart;
+window.toggleCartDrawer = toggleCartDrawer;
+window.toggleSpecs = toggleSpecs;
+window.openProductDetail = openProductDetail;
+window.closeProductDetail = closeProductDetail;
+window.changeMainImage = changeMainImage;
+window.zoomImage = zoomImage;
+window.closeZoom = closeZoom;
+window.incrementQuantity = incrementQuantity;
+window.decrementQuantity = decrementQuantity;
+window.addToCartFromDetail = addToCartFromDetail;
+window.updateCartQuantity = updateCartQuantity;
+window.proceedToWhatsAppCheckout = proceedToWhatsAppCheckout;
 
 console.log('🚀 RAY HYPER STORE JavaScript loaded successfully!');

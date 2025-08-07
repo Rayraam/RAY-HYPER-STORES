@@ -42,6 +42,23 @@
                 </nav>
                 
                 <div class="header-actions">
+                    <!-- Currency Selector -->
+                    <div class="currency-selector">
+                        <select id="currencySelector">
+                            <option value="INR">₹ INR</option>
+                            <option value="GBP">£ GBP</option>
+                            <option value="USD">$ USD</option>
+                            <option value="CAD">C$ CAD</option>
+                            <option value="LKR">Rs. LKR</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Cart Icon -->
+                    <div class="cart-icon-container" id="cartIcon">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-counter" id="cartCounter">0</span>
+                    </div>
+                    
                     <a href="https://wa.me/447553689124?text=Hello! I'm interested in your products" class="whatsapp-header" target="_blank">
                         <i class="fab fa-whatsapp"></i>
                         <span>Order via WhatsApp</span>
@@ -96,6 +113,10 @@
                         <div class="feature-item">
                             <i class="fas fa-medal"></i>
                             <span>Premium Quality</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-globe"></i>
+                            <span>Multi-Currency</span>
                         </div>
                     </div>
                     <div class="hero-buttons">
@@ -180,7 +201,7 @@
                 <p class="section-subtitle">Discover our exquisite collection of traditional and modern designs</p>
             </div>
 
-            <!-- Filters -->
+            <!-- Enhanced Filters -->
             <div class="filters-container">
                 <div class="filters-wrapper">
                     <div class="search-box">
@@ -189,11 +210,18 @@
                     </div>
                     
                     <div class="filter-group">
-                        <label>Category</label>
+                        <label>Main Category</label>
                         <select id="categoryFilter">
                             <option value="all">All Categories</option>
                             <option value="sarees">Sarees</option>
                             <option value="jewelry">Jewelry</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Sub Category</label>
+                        <select id="subCategoryFilter">
+                            <option value="all">All Sub-Categories</option>
                         </select>
                     </div>
                     
@@ -211,7 +239,7 @@
                         <label>Price Range</label>
                         <div class="price-range">
                             <input type="range" id="priceRange" min="0" max="10000" value="10000">
-                            <span class="price-display">Up to ₹<span id="priceValue">10000</span></span>
+                            <span class="price-display">Up to <span id="priceValue">₹10000</span></span>
                         </div>
                     </div>
                     
@@ -297,7 +325,7 @@
                 <div class="about-text">
                     <h2 class="section-title">About <span class="gradient-text">RAY HYPER STORE</span></h2>
                     <p class="about-description">
-                        With over an years of experience in traditional Indian fashion, RAY HYPER STORE has become 
+                        With over 10 years of experience in traditional Indian fashion, RAY HYPER STORE has become 
                         a trusted name for premium sarees and elegant jewelry. We pride ourselves on offering 
                         authentic, high-quality products that celebrate the beauty of Indian craftsmanship.
                     </p>
@@ -313,7 +341,7 @@
                             <i class="fas fa-truck"></i>
                             <div>
                                 <h4>Fast Delivery</h4>
-                                <p>Quick and secure delivery across India</p>
+                                <p>Quick and secure delivery worldwide</p>
                             </div>
                         </div>
                         <div class="about-feature">
@@ -321,6 +349,13 @@
                             <div>
                                 <h4>24/7 Support</h4>
                                 <p>WhatsApp support for all your queries</p>
+                            </div>
+                        </div>
+                        <div class="about-feature">
+                            <i class="fas fa-globe"></i>
+                            <div>
+                                <h4>Multi-Currency</h4>
+                                <p>Shop in your preferred currency</p>
                             </div>
                         </div>
                     </div>
@@ -455,7 +490,7 @@
                     <div class="footer-contact">
                         <p><i class="fab fa-whatsapp"></i> +91 98765 43210</p>
                         <p><i class="fas fa-envelope"></i> info@rayhyperstore.com</p>
-                        <p><i class="fas fa-map-marker-alt"></i> Mumbai, Maharashtra</p>
+                        <p><i class="fas fa-map-marker-alt"></i> London, United Kingdom</p>
                     </div>
                 </div>
             </div>
@@ -478,6 +513,9 @@
             <span class="whatsapp-text">Chat with us</span>
         </a>
     </div>
+
+    <!-- Cart Notification (will be dynamically created) -->
+    <div id="cartNotifications"></div>
 
     <!-- JavaScript -->
     <script src="script.js"></script>

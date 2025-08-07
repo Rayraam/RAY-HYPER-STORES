@@ -2,286 +2,321 @@
   "products": [
     {
       "id": 1,
-      "name": "Elegant Red Silk Saree",
+      "name": "SR001-Kalyani Cotton/Lata Gadwal Paithani Saree",
       "category": "sarees",
-      "price": 2500,
-      "originalPrice": 3000,
-      "image": "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400&h=400&fit=crop&q=80",
-      "description": "Beautiful red silk saree with golden border perfect for weddings and special occasions. Made from premium quality silk with intricate zari work.",
+      "subCategory": "Kalyani Cotton",
+      "price": 1223,
+      "originalPrice": 1223,
+      "image": "Products/Sarees/PMTEX/030825/001_kalyanicottonsaree_latagadwalpaithani.jpeg",
+      "images": [
+        "Products/Sarees/PMTEX/030825/001_kalyanicottonsaree_latagadwalpaithani.jpeg",
+        "Products/Sarees/PMTEX/030825/001_kalyanicottonsaree_latagadwalpaithani_2.jpeg",
+        "Products/Sarees/PMTEX/030825/001_kalyanicottonsaree_latagadwalpaithani_3.jpeg"
+      ],
+      "description": "🍁 🍁Acrylic first quality 2/100 thread and 100% original Cotton sarees🍁🍁 🦚🦚 Grand jari pallu and contrast blouse 6.30 mtrs🦚🦚 🧵🧵 Very Soft and smooth cotton, saree all over thread puttas🧵🧵 🍁🍁 Good quality and regular saree 🍁🍁",
+      "specifications": {
+        "Material": "100% Cotton with Acrylic thread (2/100 first quality)",
+        "Length": "6.30 meters with blouse piece",
+        "Work": "Thread puttas all over saree",
+        "Pallu": "Grand jari pallu design",
+        "Blouse": "Contrast blouse piece included",
+        "Care Instructions": "Hand wash cold, dry clean recommended",
+        "Origin": "Handloom - Traditional weave",
+        "Occasion": "Festival, Wedding, Traditional events",
+        "Color": "As per image",
+        "Weight": "500-600 grams (approx)"
+      },
       "inStock": true,
-      "isNew": false,
-      "onSale": true,
-      "tags": ["silk", "wedding", "traditional", "red", "zari"]
+      "isNew": true,
+      "onSale": false,
+      "tags": ["cotton", "paithani", "traditional", "handloom", "kalyani cotton", "jari work"]
     },
     {
       "id": 2,
-      "name": "Gold Plated Necklace Set",
-      "category": "jewelry",
-      "price": 1800,
-      "originalPrice": 2200,
-      "image": "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop&q=80",
-      "description": "Elegant gold plated necklace with matching earrings perfect for parties and celebrations. Tarnish resistant and hypoallergenic.",
+      "name": "SR002-Kalyani Cotton/Lata Gadwal Paithani Saree",
+      "category": "sarees",
+      "subCategory": "Lata Gadwal Paithani",
+      "price": 1223,
+      "originalPrice": 1223,
+      "image": "Products/Sarees/PMTEX/030825/002_kalyanicottonsaree_latagadwalpaithani.jpeg",
+      "images": [
+        "Products/Sarees/PMTEX/030825/002_kalyanicottonsaree_latagadwalpaithani.jpeg",
+        "Products/Sarees/PMTEX/030825/002_kalyanicottonsaree_latagadwalpaithani_2.jpeg"
+      ],
+      "description": "Acrylic first quality 2/100 thread and 100% original Cotton saree with grand jari pallu and contrast blouse, very soft and smooth cotton with thread puttas.",
+      "specifications": {
+        "Material": "100% Pure Cotton with Acrylic thread",
+        "Length": "6.30 meters with blouse piece",
+        "Work": "Traditional Gadwal weave with thread work",
+        "Pallu": "Grand jari pallu with intricate design",
+        "Blouse": "Contrast blouse piece included",
+        "Care Instructions": "Dry clean preferred, gentle hand wash",
+        "Origin": "Gadwal - Traditional handloom",
+        "Occasion": "Wedding, Festival, Party",
+        "GSM": "Medium weight fabric",
+        "Specialty": "Lata Gadwal technique"
+      },
       "inStock": true,
       "isNew": true,
       "onSale": false,
-      "tags": ["gold", "necklace", "party", "elegant", "set"]
+      "tags": ["cotton", "gadwal", "paithani", "traditional", "lata gadwal", "smooth"]
     },
     {
       "id": 3,
-      "name": "Blue Cotton Handloom Saree",
+      "name": "SR003-Banarasi Silk Wedding Saree",
       "category": "sarees",
-      "price": 1200,
-      "originalPrice": 1200,
-      "image": "https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=400&h=400&fit=crop&q=80",
-      "description": "Comfortable blue cotton handloom saree perfect for daily wear and office use. Machine washable and breathable fabric.",
+      "subCategory": "Banarasi Silk",
+      "price": 4500,
+      "originalPrice": 5500,
+      "image": "Products/Sarees/PMTEX/030825/003_banarasisilk_wedding.jpeg",
+      "images": [
+        "Products/Sarees/PMTEX/030825/003_banarasisilk_wedding.jpeg",
+        "Products/Sarees/PMTEX/030825/003_banarasisilk_wedding_2.jpeg",
+        "Products/Sarees/PMTEX/030825/003_banarasisilk_wedding_3.jpeg"
+      ],
+      "description": "Exquisite Banarasi silk saree with heavy gold zari work, perfect for weddings and special occasions. Features intricate motifs and traditional border design.",
+      "specifications": {
+        "Material": "Pure Banarasi Silk",
+        "Length": "6.30 meters with blouse piece",
+        "Work": "Heavy gold zari work with traditional motifs",
+        "Pallu": "Rich pallu with elaborate zari design",
+        "Blouse": "Matching silk blouse piece",
+        "Care Instructions": "Dry clean only",
+        "Origin": "Varanasi (Banaras) - Authentic handwoven",
+        "Thread Count": "High density silk weave",
+        "Zari Type": "Pure gold zari work",
+        "Occasion": "Wedding, Reception, Religious ceremonies"
+      },
       "inStock": true,
       "isNew": false,
-      "onSale": false,
-      "tags": ["cotton", "daily", "blue", "comfortable", "handloom"]
+      "onSale": true,
+      "tags": ["banarasi", "silk", "wedding", "zari work", "premium", "handwoven"]
     },
     {
       "id": 4,
-      "name": "Pearl Drop Earrings",
+      "name": "JW001-Gold Plated Necklace Set with Earrings",
       "category": "jewelry",
-      "price": 800,
-      "originalPrice": 1000,
-      "image": "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400&h=400&fit=crop&q=80",
-      "description": "Elegant pearl drop earrings with silver finish. Perfect for both casual and formal occasions.",
+      "subCategory": "Necklace Sets",
+      "price": 1800,
+      "originalPrice": 2200,
+      "image": "Products/Jewelry/PMJEW/030825/001_goldplated_necklace_set.jpeg",
+      "images": [
+        "Products/Jewelry/PMJEW/030825/001_goldplated_necklace_set.jpeg",
+        "Products/Jewelry/PMJEW/030825/001_goldplated_necklace_set_2.jpeg"
+      ],
+      "description": "Elegant gold plated necklace set with matching earrings, featuring intricate design work perfect for parties and celebrations.",
+      "specifications": {
+        "Material": "Copper base with gold plating",
+        "Set Includes": "Necklace + Matching Earrings",
+        "Necklace Length": "16-18 inches (adjustable)",
+        "Necklace Width": "2.5 inches at center",
+        "Earring Type": "Drop/Dangle earrings",
+        "Closure": "Lobster clasp for necklace, hook for earrings",
+        "Care Instructions": "Keep away from water, perfume, and chemicals",
+        "Storage": "Store in provided jewelry box",
+        "Occasion": "Party, Wedding, Festival",
+        "Weight": "65 grams (complete set)"
+      },
       "inStock": true,
-      "isNew": false,
+      "isNew": true,
       "onSale": true,
-      "tags": ["pearl", "earrings", "silver", "elegant", "formal"]
+      "tags": ["gold plated", "necklace set", "party wear", "elegant", "matching earrings"]
     },
     {
       "id": 5,
-      "name": "Green Banarasi Silk Saree",
-      "category": "sarees",
-      "price": 4500,
-      "originalPrice": 5500,
-      "image": "https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=400&h=400&fit=crop&q=80",
-      "description": "Exquisite green Banarasi silk saree with heavy gold zari work. A masterpiece for special occasions and weddings.",
+      "name": "JW002-Pearl Drop Earrings",
+      "category": "jewelry",
+      "subCategory": "Earrings",
+      "price": 800,
+      "originalPrice": 1000,
+      "image": "Products/Jewelry/PMJEW/030825/002_pearl_drop_earrings.jpeg",
+      "images": [
+        "Products/Jewelry/PMJEW/030825/002_pearl_drop_earrings.jpeg"
+      ],
+      "description": "Classic pearl drop earrings with silver finish, perfect for both casual and formal occasions.",
+      "specifications": {
+        "Material": "Sterling silver with freshwater pearls",
+        "Pearl Type": "Freshwater cultured pearls",
+        "Pearl Size": "8-10mm diameter",
+        "Drop Length": "2.5 inches",
+        "Closure": "French hook/ear wire",
+        "Care Instructions": "Clean with soft cloth, avoid chemicals",
+        "Occasion": "Office, Party, Daily wear",
+        "Weight": "8 grams per pair",
+        "Color": "White pearls with silver setting",
+        "Hypoallergenic": "Yes - suitable for sensitive ears"
+      },
       "inStock": true,
-      "isNew": true,
-      "onSale": false,
-      "tags": ["banarasi", "silk", "premium", "green", "zari"]
+      "isNew": false,
+      "onSale": true,
+      "tags": ["pearl", "earrings", "silver", "elegant", "daily wear", "freshwater"]
     },
     {
       "id": 6,
-      "name": "Diamond Tennis Bracelet",
+      "name": "JW003-Traditional Jhumka Earrings",
       "category": "jewelry",
-      "price": 3200,
-      "originalPrice": 4000,
-      "image": "https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=400&h=400&fit=crop&q=80",
-      "description": "Stunning diamond tennis bracelet with premium setting. Perfect for special occasions and gifting.",
+      "subCategory": "Earrings",
+      "price": 650,
+      "originalPrice": 800,
+      "image": "Products/Jewelry/PMJEW/030825/003_traditional_jhumka.jpeg",
+      "images": [
+        "Products/Jewelry/PMJEW/030825/003_traditional_jhumka.jpeg",
+        "Products/Jewelry/PMJEW/030825/003_traditional_jhumka_2.jpeg"
+      ],
+      "description": "Beautiful traditional jhumka earrings with oxidized silver finish and intricate detailing.",
+      "specifications": {
+        "Material": "Silver with oxidized finish",
+        "Style": "Traditional Indian Jhumka",
+        "Size": "Medium (1.5 inches length)",
+        "Closure": "Post and butterfly back",
+        "Work": "Hand crafted with traditional motifs",
+        "Care Instructions": "Clean with silver cleaning cloth",
+        "Origin": "Traditional Indian craftsmanship",
+        "Occasion": "Wedding, Festival, Traditional events",
+        "Weight": "12 grams per pair",
+        "Color": "Antique silver/oxidized finish"
+      },
       "inStock": true,
-      "isNew": false,
+      "isNew": true,
       "onSale": true,
-      "tags": ["diamond", "bracelet", "premium", "luxury", "gift"]
+      "tags": ["jhumka", "traditional", "silver", "oxidized", "indian jewelry", "festival"]
     },
     {
       "id": 7,
-      "name": "Purple Georgette Saree",
+      "name": "SR004-Cotton Daily Wear Saree",
       "category": "sarees",
-      "price": 2200,
-      "originalPrice": 2200,
-      "image": "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400&h=400&fit=crop&q=80",
-      "description": "Elegant purple georgette saree with embroidery work. Perfect for parties and celebrations.",
+      "subCategory": "Cotton Handloom",
+      "price": 1200,
+      "originalPrice": 1200,
+      "image": "Products/Sarees/PMTEX/030825/004_cotton_dailywear.jpeg",
+      "images": [
+        "Products/Sarees/PMTEX/030825/004_cotton_dailywear.jpeg"
+      ],
+      "description": "Comfortable cotton handloom saree perfect for daily wear, featuring soft fabric and beautiful border design.",
+      "specifications": {
+        "Material": "100% Pure Cotton",
+        "Length": "6.30 meters with blouse piece",
+        "Weave": "Handloom cotton weave",
+        "Border": "Traditional cotton border",
+        "Blouse": "Running blouse piece included",
+        "Care Instructions": "Machine wash cold, line dry",
+        "Origin": "South Indian handloom",
+        "GSM": "Medium weight - 120 GSM",
+        "Occasion": "Daily wear, Office, Casual",
+        "Color Fastness": "Tested - colors won't fade"
+      },
       "inStock": true,
       "isNew": false,
       "onSale": false,
-      "tags": ["georgette", "purple", "embroidery", "party", "celebration"]
+      "tags": ["cotton", "daily wear", "handloom", "comfortable", "office wear", "casual"]
     },
     {
       "id": 8,
-      "name": "Silver Oxidized Jhumkas",
+      "name": "JW004-Diamond Tennis Bracelet",
       "category": "jewelry",
-      "price": 650,
-      "originalPrice": 800,
-      "image": "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400&h=400&fit=crop&q=80",
-      "description": "Traditional silver oxidized jhumkas with intricate design. Perfect for ethnic occasions.",
-      "inStock": true,
-      "isNew": true,
-      "onSale": true,
-      "tags": ["silver", "jhumkas", "traditional", "oxidized", "ethnic"]
-    },
-    {
-      "id": 9,
-      "name": "Pink Designer Saree",
-      "category": "sarees",
+      "subCategory": "Bracelets",
       "price": 3200,
-      "originalPrice": 3800,
-      "image": "https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=400&h=400&fit=crop&q=80",
-      "description": "Designer pink saree with heavy work perfect for weddings and special functions.",
+      "originalPrice": 4000,
+      "image": "Products/Jewelry/PMJEW/030825/004_diamond_tennis_bracelet.jpeg",
+      "images": [
+        "Products/Jewelry/PMJEW/030825/004_diamond_tennis_bracelet.jpeg",
+        "Products/Jewelry/PMJEW/030825/004_diamond_tennis_bracelet_2.jpeg"
+      ],
+      "description": "Stunning diamond tennis bracelet with premium setting, featuring brilliant cut stones in a classic design.",
+      "specifications": {
+        "Material": "Sterling silver with CZ stones",
+        "Stone Type": "Cubic Zirconia (Diamond simulant)",
+        "Stone Count": "50+ stones",
+        "Bracelet Length": "7 inches (standard)",
+        "Closure": "Box clasp with safety latch",
+        "Stone Setting": "Prong setting",
+        "Care Instructions": "Clean with jewelry cleaner, store separately",
+        "Occasion": "Wedding, Anniversary, Special events",
+        "Weight": "25 grams",
+        "Certificate": "Quality assurance certificate included"
+      },
       "inStock": true,
       "isNew": false,
       "onSale": true,
-      "tags": ["designer", "pink", "wedding", "heavy work", "special"]
-    },
-    {
-      "id": 10,
-      "name": "Gold Chain Necklace",
-      "category": "jewelry",
-      "price": 2800,
-      "originalPrice": 3200,
-      "image": "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop&q=80",
-      "description": "Classic gold chain necklace perfect for daily wear and layering with other jewelry.",
-      "inStock": true,
-      "isNew": false,
-      "onSale": false,
-      "tags": ["gold", "chain", "daily", "classic", "layering"]
-    },
-    {
-      "id": 11,
-      "name": "Maroon Velvet Saree",
-      "category": "sarees",
-      "price": 2800,
-      "originalPrice": 3200,
-      "image": "https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=400&h=400&fit=crop&q=80",
-      "description": "Rich maroon velvet saree with golden border. Perfect for winter occasions and festivals.",
-      "inStock": true,
-      "isNew": true,
-      "onSale": true,
-      "tags": ["velvet", "maroon", "golden", "rich", "winter"]
-    },
-    {
-      "id": 12,
-      "name": "Emerald Ring Set",
-      "category": "jewelry",
-      "price": 4200,
-      "originalPrice": 5000,
-      "image": "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&h=400&fit=crop&q=80",
-      "description": "Beautiful emerald ring set with matching earrings. Perfect for special occasions and gifting.",
-      "inStock": true,
-      "isNew": false,
-      "onSale": true,
-      "tags": ["emerald", "ring", "set", "precious", "gift"]
-    },
-    {
-      "id": 13,
-      "name": "Yellow Cotton Saree",
-      "category": "sarees",
-      "price": 980,
-      "originalPrice": 980,
-      "image": "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400&h=400&fit=crop&q=80",
-      "description": "Bright yellow cotton saree perfect for summer and casual occasions. Comfortable and easy to maintain.",
-      "inStock": true,
-      "isNew": false,
-      "onSale": false,
-      "tags": ["cotton", "yellow", "summer", "casual", "comfortable"]
-    },
-    {
-      "id": 14,
-      "name": "Antique Gold Bangles",
-      "category": "jewelry",
-      "price": 1500,
-      "originalPrice": 1800,
-      "image": "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop&q=80",
-      "description": "Set of 4 antique gold bangles with traditional design. Perfect for ethnic occasions.",
-      "inStock": true,
-      "isNew": false,
-      "onSale": true,
-      "tags": ["antique", "gold", "bangles", "traditional", "ethnic"]
-    },
-    {
-      "id": 15,
-      "name": "Black Chiffon Saree",
-      "category": "sarees",
-      "price": 1800,
-      "originalPrice": 2200,
-      "image": "https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=400&h=400&fit=crop&q=80",
-      "description": "Elegant black chiffon saree with sequin work. Perfect for evening parties and formal events.",
-      "inStock": true,
-      "isNew": true,
-      "onSale": true,
-      "tags": ["chiffon", "black", "sequin", "evening", "formal"]
-    },
-    {
-      "id": 16,
-      "name": "Ruby Pendant Set",
-      "category": "jewelry",
-      "price": 3800,
-      "originalPrice": 4500,
-      "image": "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400&h=400&fit=crop&q=80",
-      "description": "Stunning ruby pendant set with matching earrings. Perfect for weddings and special occasions.",
-      "inStock": true,
-      "isNew": true,
-      "onSale": false,
-      "tags": ["ruby", "pendant", "set", "wedding", "precious"]
-    },
-    {
-      "id": 17,
-      "name": "White Linen Saree",
-      "category": "sarees",
-      "price": 1400,
-      "originalPrice": 1400,
-      "image": "https://drive.google.com/file/d/1vk8OBJXizG_-R-Y74YDG_359g6P1QKaV/view?usp=sharing",
-      "description": "Crisp white linen saree with subtle border. Perfect for office wear and formal occasions.",
-      "inStock": true,
-      "isNew": false,
-      "onSale": false,
-      "tags": ["linen", "white", "office", "formal", "crisp"]
-    },
-    {
-      "id": 18,
-      "name": "Silver Anklets Pair",
-      "category": "jewelry",
-      "price": 750,
-      "originalPrice": 900,
-      "image": "https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=400&h=400&fit=crop&q=80",
-      "description": "Beautiful silver anklets with traditional design and pleasant sound. Perfect for ethnic wear.",
-      "inStock": true,
-      "isNew": false,
-      "onSale": true,
-      "tags": ["silver", "anklets", "traditional", "ethnic", "sound"]
-    },
-    {
-      "id": 19,
-      "name": "Orange Kanjivaram Saree",
-      "category": "sarees",
-      "price": 5200,
-      "originalPrice": 6000,
-      "image": "https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=400&h=400&fit=crop&q=80",
-      "description": "Premium orange Kanjivaram saree with traditional motifs. Perfect for weddings and festivals.",
-      "inStock": true,
-      "isNew": true,
-      "onSale": true,
-      "tags": ["kanjivaram", "orange", "premium", "wedding", "festival"]
-    },
-    {
-      "id": 20,
-      "name": " Choker Set",
-      "category": "jewelry",
-      "price": 2200,
-      "originalPrice": 2700,
-      "image": "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop&q=80",
-      "description": "Elegant Kundan choker set with matching earrings. Perfect for traditional and modern outfits.",
-      "inStock": true,
-      "isNew": false,
-      "onSale": true,
-      "tags": ["kundan", "choker", "set", "traditional", "modern"]
+      "tags": ["diamond", "tennis bracelet", "premium", "cz stones", "luxury", "wedding"]
     }
   ],
   "categories": [
     {
       "id": "sarees",
       "name": "Sarees",
-      "count": 10,
-      "description": "Traditional and modern sarees for every occasion"
+      "count": 15,
+      "description": "Traditional and modern sarees for every occasion",
+      "subCategories": [
+        {
+          "id": "kalyanicotton",
+          "name": "Kalyani Cotton",
+          "count": 5
+        },
+        {
+          "id": "latagadwalpaithani",
+          "name": "Lata Gadwal Paithani",
+          "count": 3
+        },
+        {
+          "id": "banarasisilk",
+          "name": "Banarasi Silk",
+          "count": 4
+        },
+        {
+          "id": "cottonhandloom",
+          "name": "Cotton Handloom",
+          "count": 3
+        }
+      ]
     },
     {
       "id": "jewelry",
-      "name": "Jewelry", 
-      "count": 10,
-      "description": "Elegant jewelry pieces to complement your style"
+      "name": "Jewelry",
+      "count": 12,
+      "description": "Elegant jewelry pieces to complement your style",
+      "subCategories": [
+        {
+          "id": "necklacesets",
+          "name": "Necklace Sets",
+          "count": 4
+        },
+        {
+          "id": "earrings",
+          "name": "Earrings",
+          "count": 5
+        },
+        {
+          "id": "bracelets",
+          "name": "Bracelets",
+          "count": 2
+        },
+        {
+          "id": "rings",
+          "name": "Rings",
+          "count": 1
+        }
+      ]
     }
   ],
   "storeInfo": {
     "name": "RAY HYPER STORE",
     "description": "Premium Sarees and Jewelry Store",
-    "whatsappNumber": "919876543210",
-    "email": "info@rayhyperstore.com",
-    "address": "123 Fashion Street, Mumbai, Maharashtra 400001",
-    "totalProducts": 20,
-    "lastUpdated": "2025-01-15"
+    "whatsappNumber": "919698639115",
+    "email": "contact.rayraam@gmail.com",
+    "address": "119, Shakespear street, Eastham, London, United Kingdom E12 6LW",
+    "totalProducts": 27,
+    "lastUpdated": "2025-08-07",
+    "currencies": {
+      "supported": ["INR", "GBP", "USD", "CAD", "LKR"],
+      "default": "INR",
+      "exchangeRates": {
+        "INR": 1,
+        "GBP": 0.012,
+        "USD": 0.012,
+        "CAD": 0.016,
+        "LKR": 3.65
+      }
+    }
   }
 }
