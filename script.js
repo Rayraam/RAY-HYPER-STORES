@@ -16,7 +16,7 @@ const sampleProducts = [
         category: "sarees",
         price: 2500,
         originalPrice: 3000,
-        image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400&h=400&fit=crop&q=80",
+        image: "https://drive.google.com/file/d/1vk8OBJXizG_-R-Y74YDG_359g6P1QKaV/view?usp=drive_link",
         description: "Beautiful red silk saree with golden border perfect for weddings and special occasions",
         inStock: true,
         isNew: false,
