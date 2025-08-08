@@ -2,7 +2,8 @@
 let allProducts = [];
 let displayedProducts = [];
 let currentPage = 1;
-const PRODUCTS_PER_PAGE = 12;
+const PRODUCTS_PER_PAGE = 50; // Changed to 50 products per page
+let totalPages = 1;
 let isLoading = false;
 
 // Cart System (using in-memory storage for Claude.ai compatibility)
@@ -11,15 +12,15 @@ let currentCurrency = 'INR';
 const CART_STORAGE_KEY = 'raystore_cart';
 let exchangeRates = {
     'INR': 1,
-    'GBP': 0.012,
-    'USD': 0.012,
-    'CAD': 0.016,
-    'LKR': 3.65
+    'GBP': 0.0087,
+    'USD': 0.0113,
+    'CAD': 0.0156,
+    'LKR': 3.44
 };
 let userCountry = 'IN';
 
 // WhatsApp Configuration
-const WHATSAPP_NUMBER = '919698639115';
+const WHATSAPP_NUMBER = '447553689124';
 
 // Enhanced Sample Products Data with specifications
 const sampleProducts = [
@@ -27,7 +28,7 @@ const sampleProducts = [
         id: 1,
         name: "SR001-Kalyani Cotton/Lata Gadwal Paithani Saree",
         category: "sarees",
-        subCategory: "Kalyani Cotton",
+        subCategory: "Kalyani Cotton/Lata Gadwal Paithani",
         price: 1223,
         originalPrice: 1223,
         image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400&h=400&fit=crop&q=80",
@@ -77,84 +78,6 @@ const sampleProducts = [
         isNew: true,
         onSale: true,
         tags: ["gold", "necklace", "party", "elegant"]
-    },
-    {
-        id: 3,
-        name: "Blue Cotton Handloom Saree",
-        category: "sarees",
-        subCategory: "Cotton Handloom",
-        price: 1200,
-        originalPrice: 1200,
-        image: "https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=400&h=400&fit=crop&q=80",
-        images: [
-            "https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=800&h=800&fit=crop&q=80"
-        ],
-        description: "Comfortable blue cotton handloom saree perfect for daily wear",
-        specifications: {
-            "Material": "100% Pure Cotton",
-            "Length": "6.30 meters with blouse",
-            "Weave": "Handloom",
-            "Border": "Traditional border design",
-            "Blouse": "Running blouse included",
-            "Care": "Machine wash cold",
-            "GSM": "120 GSM"
-        },
-        inStock: true,
-        isNew: false,
-        onSale: false,
-        tags: ["cotton", "daily", "blue", "comfortable"]
-    },
-    {
-        id: 4,
-        name: "Pearl Drop Earrings",
-        category: "jewelry",
-        subCategory: "Earrings",
-        price: 800,
-        originalPrice: 1000,
-        image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400&h=400&fit=crop&q=80",
-        images: [
-            "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&h=800&fit=crop&q=80"
-        ],
-        description: "Elegant pearl drop earrings with silver finish",
-        specifications: {
-            "Material": "Sterling Silver with Pearl",
-            "Pearl Type": "Freshwater Pearl",
-            "Drop Length": "2.5 inches",
-            "Closure": "French hook",
-            "Occasion": "Daily wear, Office, Party",
-            "Care": "Store in jewelry box, avoid moisture",
-            "Weight": "8 grams"
-        },
-        inStock: true,
-        isNew: false,
-        onSale: true,
-        tags: ["pearl", "earrings", "silver", "elegant"]
-    },
-    {
-        id: 5,
-        name: "Green Banarasi Silk Saree",
-        category: "sarees",
-        subCategory: "Banarasi Silk",
-        price: 4500,
-        originalPrice: 5500,
-        image: "https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=400&h=400&fit=crop&q=80",
-        images: [
-            "https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=800&h=800&fit=crop&q=80"
-        ],
-        description: "Exquisite green Banarasi silk saree with heavy gold zari work",
-        specifications: {
-            "Material": "Pure Banarasi Silk",
-            "Length": "6.30 meters with blouse",
-            "Work": "Heavy Zari Work",
-            "Weave": "Handwoven",
-            "Blouse": "Matching blouse piece",
-            "Care": "Dry clean only",
-            "Thread Count": "High density weave"
-        },
-        inStock: true,
-        isNew: true,
-        onSale: false,
-        tags: ["banarasi", "silk", "premium", "green"]
     }
 ];
 
@@ -438,15 +361,46 @@ function loadProducts() {
             throw new Error('External products file not found');
         })
         .then(data => {
-            if (data.products && data.products.length > 0) {
-                allProducts = data.products;
+            let productsArray = [];
+            if (Array.isArray(data)) {
+                productsArray = data; // plain array
+            } else if (data.products && Array.isArray(data.products)) {
+                productsArray = data.products; // object with "products"
+            } else if (data.id) {
+                productsArray = [data]; // single object
+            }
+
+            if (productsArray.length > 0) {
+                const fixedProducts = productsArray.map(product => ({
+                    ...product,
+                    image: product.image ? product.image.replace(/\\/g, '/') : product.image,
+                    images: product.images ? product.images.map(img => img.replace(/\\/g, '/')) : product.images
+                }));
+                allProducts = fixedProducts;
                 console.log('✅ Updated with', allProducts.length, 'products from JSON file');
                 filterAndDisplayProducts();
-            }
+        }
+
         })
         .catch(error => {
             console.log('ℹ️ Using sample data:', error.message);
         });
+}
+
+// Get unique subcategories for a given category
+function getSubCategoriesForCategory(category) {
+    if (category === 'all') {
+        return [];
+    }
+    
+    const subcategories = [...new Set(
+        allProducts
+            .filter(product => product.category === category)
+            .map(product => product.subCategory)
+            .filter(subCat => subCat)
+    )];
+    
+    return subcategories.sort();
 }
 
 // Setup Event Listeners
@@ -549,27 +503,32 @@ function updateCurrencyDisplay() {
 // Handle Sub Category Change
 function handleSubCategoryChange(event) {
     console.log('📂 Sub-category changed to:', event.target.value);
+    currentPage = 1; // Reset to first page
     filterAndDisplayProducts();
 }
 
-// Populate sub-categories based on main category
+// Populate sub-categories based on main category - FIXED VERSION
 function populateSubCategories(category) {
     const subCategoryFilter = document.getElementById('subCategoryFilter');
     if (!subCategoryFilter) return;
     
-    let subCategories = [];
+    // Get actual subcategories from the products data
+    const subCategories = getSubCategoriesForCategory(category);
     
-    if (category === 'sarees') {
-        subCategories = ['All Sub-Categories', 'Kalyani Cotton', 'Lata Gadwal Paithani', 'Cotton Handloom', 'Banarasi Silk'];
-    } else if (category === 'jewelry') {
-        subCategories = ['All Sub-Categories', 'Necklace Sets', 'Earrings', 'Bangles', 'Rings'];
-    } else {
-        subCategories = ['All Sub-Categories'];
+    // Clear existing options
+    subCategoryFilter.innerHTML = '<option value="all">All Sub-Categories</option>';
+    
+    // Add subcategories if any exist
+    if (subCategories.length > 0) {
+        subCategories.forEach(subCat => {
+            const option = document.createElement('option');
+            option.value = subCat.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/gi, '');
+            option.textContent = subCat;
+            subCategoryFilter.appendChild(option);
+        });
     }
     
-    subCategoryFilter.innerHTML = subCategories.map((subCat, index) => 
-        `<option value="${index === 0 ? 'all' : subCat.toLowerCase().replace(/\s+/g, '')}">${subCat}</option>`
-    ).join('');
+    console.log(`📂 Populated ${subCategories.length} subcategories for ${category}`);
 }
 
 // Handle Category Change
@@ -578,6 +537,7 @@ function handleCategoryChange(event) {
     console.log('📂 Category changed to:', category);
     
     populateSubCategories(category);
+    currentPage = 1; // Reset to first page
     filterAndDisplayProducts();
 }
 
@@ -597,12 +557,14 @@ function debounce(func, wait) {
 // Handle Search
 function handleSearch(event) {
     console.log('🔍 Searching for:', event.target.value);
+    currentPage = 1; // Reset to first page
     filterAndDisplayProducts();
 }
 
 // Handle Sort Change
 function handleSortChange(event) {
     console.log('🔄 Sort changed to:', event.target.value);
+    currentPage = 1; // Reset to first page
     filterAndDisplayProducts();
 }
 
@@ -613,6 +575,7 @@ function handlePriceChange(event) {
         priceValue.textContent = formatPrice(event.target.value);
     }
     console.log('💰 Price range changed to:', event.target.value);
+    currentPage = 1; // Reset to first page
     filterAndDisplayProducts();
 }
 
@@ -636,7 +599,7 @@ function handleViewChange(event) {
     }
 }
 
-// Filter and Display Products
+// Filter and Display Products - UPDATED FOR PAGINATION
 function filterAndDisplayProducts() {
     console.log('🔄 Filtering and displaying products...');
     
@@ -664,8 +627,11 @@ function filterAndDisplayProducts() {
             (product.tags && product.tags.some(tag => tag.toLowerCase().includes(searchTerm)));
         
         const matchesCategory = category === 'all' || product.category === category;
+        
+        // Fixed subcategory matching
         const matchesSubCategory = subCategory === 'all' || 
-            product.subCategory?.toLowerCase().replace(/\s+/g, '') === subCategory;
+            (product.subCategory && product.subCategory.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/gi, '') === subCategory);
+        
         const matchesPrice = product.price <= maxPrice;
         const inStock = product.inStock !== false;
         
@@ -677,11 +643,20 @@ function filterAndDisplayProducts() {
     // Sort products
     filteredProducts = sortProducts(filteredProducts, sortBy);
     
-    currentPage = 1;
+    // Calculate pagination
     displayedProducts = filteredProducts;
+    totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+    
+    // Ensure current page is valid
+    if (currentPage > totalPages && totalPages > 0) {
+        currentPage = totalPages;
+    } else if (currentPage < 1) {
+        currentPage = 1;
+    }
     
     displayProducts();
     updateResultsCount(filteredProducts.length);
+    updatePaginationControls();
 }
 
 // Sort Products
@@ -701,11 +676,10 @@ function sortProducts(products, sortBy) {
     }
 }
 
-// Display Products
+// Display Products - UPDATED FOR PAGINATION
 function displayProducts() {
     const productsGrid = document.getElementById('productsGrid');
     const loadingSpinner = document.getElementById('loadingSpinner');
-    const loadMoreBtn = document.getElementById('loadMoreBtn');
     
     if (!productsGrid) {
         console.log('❌ Products grid element not found');
@@ -716,11 +690,11 @@ function displayProducts() {
     showLoading(true);
     
     setTimeout(() => {
-        const startIndex = 0;
-        const endIndex = currentPage * PRODUCTS_PER_PAGE;
+        const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
+        const endIndex = Math.min(startIndex + PRODUCTS_PER_PAGE, displayedProducts.length);
         const productsToShow = displayedProducts.slice(startIndex, endIndex);
         
-        console.log('📦 Showing', productsToShow.length, 'products');
+        console.log(`📦 Showing products ${startIndex + 1}-${endIndex} of ${displayedProducts.length} (Page ${currentPage}/${totalPages})`);
         
         if (productsToShow.length === 0) {
             showNoProducts();
@@ -740,22 +714,13 @@ function displayProducts() {
             });
         }
         
-        // Update load more button
-        if (loadMoreBtn) {
-            if (endIndex < displayedProducts.length) {
-                loadMoreBtn.style.display = 'block';
-            } else {
-                loadMoreBtn.style.display = 'none';
-            }
-        }
-        
         showLoading(false);
         console.log('✅ Products displayed successfully');
         
     }, 300);
 }
 
-// Create Product Card with enhanced features
+// Create Product Card with enhanced features - UPDATED FOR FULL DESCRIPTION
 function createProductCard(product) {
     if (!product) return '';
     
@@ -789,7 +754,7 @@ function createProductCard(product) {
             </div>
             <div class="product-info">
                 <h3 class="product-name">${product.name}</h3>
-                <p class="product-description">${product.description}</p>
+                <p class="product-description-full">${product.description}</p>
                 
                 ${specsPreview ? `
                 <div class="product-specs">
@@ -824,6 +789,100 @@ function createProductCard(product) {
             </div>
         </div>
     `;
+}
+
+// NEW: Update Pagination Controls
+function updatePaginationControls() {
+    // Remove existing pagination if exists
+    const existingPagination = document.querySelector('.pagination-container');
+    if (existingPagination) {
+        existingPagination.remove();
+    }
+    
+    // Hide the old "Load More" button
+    const loadMoreContainer = document.querySelector('.load-more-container');
+    if (loadMoreContainer) {
+        loadMoreContainer.style.display = 'none';
+    }
+    
+    if (displayedProducts.length === 0 || totalPages <= 1) {
+        return;
+    }
+    
+    // Create new pagination container
+    const paginationContainer = document.createElement('div');
+    paginationContainer.className = 'pagination-container';
+    
+    let paginationHTML = '<div class="pagination">';
+    
+    // Previous button
+    if (currentPage > 1) {
+        paginationHTML += `<button class="pagination-btn" onclick="changePage(${currentPage - 1})">
+            <i class="fas fa-chevron-left"></i> Previous
+        </button>`;
+    }
+    
+    // Page numbers
+    const startPage = Math.max(1, currentPage - 2);
+    const endPage = Math.min(totalPages, currentPage + 2);
+    
+    if (startPage > 1) {
+        paginationHTML += `<button class="pagination-btn" onclick="changePage(1)">1</button>`;
+        if (startPage > 2) {
+            paginationHTML += `<span class="pagination-dots">...</span>`;
+        }
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+        paginationHTML += `<button class="pagination-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+    }
+    
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+            paginationHTML += `<span class="pagination-dots">...</span>`;
+        }
+        paginationHTML += `<button class="pagination-btn" onclick="changePage(${totalPages})">${totalPages}</button>`;
+    }
+    
+    // Next button
+    if (currentPage < totalPages) {
+        paginationHTML += `<button class="pagination-btn" onclick="changePage(${currentPage + 1})">
+            Next <i class="fas fa-chevron-right"></i>
+        </button>`;
+    }
+    
+    paginationHTML += '</div>';
+    
+    // Page info
+    const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE + 1;
+    const endIndex = Math.min(currentPage * PRODUCTS_PER_PAGE, displayedProducts.length);
+    
+    paginationHTML += `<div class="pagination-info">
+        Showing ${startIndex}-${endIndex} of ${displayedProducts.length} products (Page ${currentPage} of ${totalPages})
+    </div>`;
+    
+    paginationContainer.innerHTML = paginationHTML;
+    
+    // Insert after products grid
+    const productsSection = document.querySelector('.products-section .container');
+    if (productsSection) {
+        productsSection.appendChild(paginationContainer);
+    }
+}
+
+// NEW: Change Page Function
+function changePage(newPage) {
+    if (newPage >= 1 && newPage <= totalPages && newPage !== currentPage) {
+        currentPage = newPage;
+        displayProducts();
+        updatePaginationControls();
+        
+        // Scroll to top of products section
+        const productsSection = document.getElementById('products');
+        if (productsSection) {
+            productsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
 }
 
 // Toggle specifications in product card
@@ -1157,8 +1216,14 @@ function showLoading(show) {
 function updateResultsCount(count) {
     const resultsCount = document.getElementById('resultsCount');
     if (resultsCount) {
-        const showing = Math.min(currentPage * PRODUCTS_PER_PAGE, count);
-        resultsCount.textContent = `Showing ${showing} of ${count} products`;
+        const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE + 1;
+        const endIndex = Math.min(currentPage * PRODUCTS_PER_PAGE, count);
+        
+        if (count === 0) {
+            resultsCount.textContent = 'No products found';
+        } else {
+            resultsCount.textContent = `Showing ${startIndex}-${endIndex} of ${count} products`;
+        }
     }
 }
 
@@ -1176,6 +1241,12 @@ function showNoProducts() {
                 </button>
             </div>
         `;
+    }
+    
+    // Hide pagination if no products
+    const paginationContainer = document.querySelector('.pagination-container');
+    if (paginationContainer) {
+        paginationContainer.style.display = 'none';
     }
 }
 
@@ -1195,61 +1266,14 @@ function clearFilters() {
     if (priceRange) priceRange.value = '10000';
     if (priceValue) priceValue.textContent = formatPrice(10000);
     
+    currentPage = 1;
     filterAndDisplayProducts();
 }
 
-// Load More Products
+// DEPRECATED: Load More Products - Replaced by pagination
 function loadMoreProducts() {
-    if (isLoading) return;
-    
-    isLoading = true;
-    currentPage++;
-    
-    const productsGrid = document.getElementById('productsGrid');
-    const loadMoreBtn = document.getElementById('loadMoreBtn');
-    
-    if (!productsGrid) return;
-    
-    console.log('📥 Loading more products...');
-    
-    if (loadMoreBtn) {
-        loadMoreBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
-        loadMoreBtn.disabled = true;
-    }
-    
-    setTimeout(() => {
-        const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
-        const endIndex = currentPage * PRODUCTS_PER_PAGE;
-        const newProducts = displayedProducts.slice(startIndex, endIndex);
-        
-        const newProductsHTML = newProducts.map(product => createProductCard(product)).join('');
-        productsGrid.insertAdjacentHTML('beforeend', newProductsHTML);
-        
-        if (loadMoreBtn) {
-            if (endIndex < displayedProducts.length) {
-                loadMoreBtn.innerHTML = '<i class="fas fa-plus"></i> Load More Products';
-                loadMoreBtn.disabled = false;
-            } else {
-                loadMoreBtn.style.display = 'none';
-            }
-        }
-        
-        updateResultsCount(displayedProducts.length);
-        
-        const newCards = productsGrid.querySelectorAll('.product-card:nth-last-child(-n+' + newProducts.length + ')');
-        newCards.forEach((card, index) => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            setTimeout(() => {
-                card.style.transition = 'all 0.5s ease';
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            }, index * 100);
-        });
-        
-        isLoading = false;
-        console.log('✅ More products loaded');
-    }, 1000);
+    // This function is now deprecated in favor of pagination
+    console.log('Load more functionality has been replaced by pagination');
 }
 
 // Filter by Category
@@ -1258,6 +1282,7 @@ function filterByCategory(category) {
     if (categoryFilter) {
         categoryFilter.value = category;
         populateSubCategories(category);
+        currentPage = 1;
         filterAndDisplayProducts();
     }
     
@@ -1419,7 +1444,8 @@ function setupIntersectionObserver() {
 // Export functions for global use
 window.scrollToProducts = scrollToProducts;
 window.filterByCategory = filterByCategory;
-window.loadMoreProducts = loadMoreProducts;
+window.loadMoreProducts = loadMoreProducts; // Kept for compatibility but deprecated
+window.changePage = changePage; // New pagination function
 window.clearFilters = clearFilters;
 window.addToCart = addToCart;
 window.removeFromCart = removeFromCart;

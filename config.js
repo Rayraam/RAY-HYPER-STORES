@@ -11,7 +11,7 @@ const STORE_CONFIG = {
         description: "Discover 10,000+ Premium Sarees and Elegant Jewelry Collections",
         email: "contact.rayraam@gmail.com",
         phone: "+91 96986 39115",
-        whatsappNumber: "919698639115", // WITHOUT + sign, WITH country code
+        whatsappNumber: "447553689124", // WITHOUT + sign, WITH country code
         address: "119,Shakespear street, Eastham, London, United Kingdom E12 6LW",
         website: "https://raystore.com"
     },
@@ -194,7 +194,7 @@ const STORE_CONFIG = {
         facebook: "https://facebook.com/raystore",
         instagram: "https://instagram.com/raystore", 
         youtube: "https://youtube.com/raystore",
-        whatsapp: "https://wa.me/919698639115",
+        whatsapp: "https://wa.me/447553689124",
         twitter: "https://twitter.com/raystore",
         pinterest: "https://pinterest.com/raystore"
     },
